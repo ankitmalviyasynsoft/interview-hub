@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ControlledInput } from "@/_components/ui/ControlledInput";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/_components/ui/button";
 
 // --- Icons ---
 const Icons = {

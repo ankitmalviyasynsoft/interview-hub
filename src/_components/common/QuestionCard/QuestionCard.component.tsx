@@ -3,16 +3,17 @@
 
 import React, { useState } from 'react';
 import { Question } from '@/lib/types';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/_components/ui/button';
+import { Badge } from '@/_components/ui/badge';
+import { Card, CardContent } from '@/_components/ui/card';
 import {
     ChevronDown,
     ChevronUp,
     Calendar,
     Building2,
     BarChart2,
-    MessageSquareQuote
+    MessageSquareQuote,
+    Clock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -26,53 +27,54 @@ export function QuestionCard({ question, className }: QuestionCardProps) {
 
     return (
         <Card className={cn(
-            "group overflow-hidden transition-all duration-300 hover:shadow-lg border-border/50 bg-card hover:border-primary/20",
+            "group relative overflow-hidden transition-all duration-500 hover:shadow-2xl border-border/40 bg-card hover:border-primary/30",
+            "before:absolute before:inset-0 before:bg-gradient-to-br before:from-primary/5 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity",
             className
         )}>
-            <CardContent className="p-4 md:p-5">
-                {/* Header: Badges and Date */}
-                <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <CardContent className="p-5 sm:p-6 lg:p-7 relative z-10">
+                {/* Header: Company & Difficulty */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                     <div className="flex flex-wrap items-center gap-2">
-                        <Badge variant="secondary" className="flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-primary/5 text-primary border-primary/10">
-                            <Building2 className="h-3 w-3" />
-                            {question.company}
-                        </Badge>
-                        <Badge
-                            variant="outline"
-                            className={cn(
-                                "flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                                question.difficulty === 'Easy' ? 'bg-emerald-500/5 text-emerald-600 border-emerald-200' :
-                                    question.difficulty === 'Medium' ? 'bg-amber-500/5 text-amber-600 border-amber-200' :
-                                        'bg-rose-500/5 text-rose-600 border-rose-200'
-                            )}
-                        >
-                            <BarChart2 className="h-3 w-3" />
-                            {question.difficulty}
-                        </Badge>
+                        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 shadow-sm">
+                            <Building2 className="h-3.5 w-3.5" />
+                            <span className="text-[11px] font-bold uppercase tracking-wider">{question.company}</span>
+                        </div>
+                        <div className={cn(
+                            "flex items-center gap-1.5 px-3 py-1 rounded-full border shadow-sm",
+                            question.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-600 border-emerald-200/50' :
+                                question.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-600 border-amber-200/50' :
+                                    'bg-rose-500/10 text-rose-600 border-rose-200/50'
+                        )}>
+                            <BarChart2 className="h-3.5 w-3.5" />
+                            <span className="text-[11px] font-bold uppercase tracking-wider">{question.difficulty}</span>
+                        </div>
                     </div>
-                    <div className="flex items-center text-[10px] font-medium text-muted-foreground gap-1.5 uppercase tracking-tighter" suppressHydrationWarning>
-                        <Calendar className="h-3 w-3 opacity-70" />
-                        {new Date(question.createdAt).toLocaleDateString()}
+                    <div className="flex items-center text-[11px] font-semibold text-muted-foreground/80 gap-2 bg-muted/50 px-2.5 py-1 rounded-md self-start sm:self-auto" suppressHydrationWarning>
+                        <Clock className="h-3.5 w-3.5 opacity-60" />
+                        {new Date(question.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                     </div>
                 </div>
 
-                {/* Question */}
-                <div className="flex gap-3 items-start mb-4">
-                    <div className="mt-1 flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                        <MessageSquareQuote className="h-4 w-4" />
+                {/* Question Section */}
+                <div className="flex gap-4 items-start mb-6">
+                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center text-primary-foreground shadow-lg shadow-primary/20 ring-4 ring-primary/5">
+                        <MessageSquareQuote className="h-5 w-5 sm:h-6 sm:w-6" />
                     </div>
-                    <h3 className="text-base md:text-lg font-bold text-foreground leading-tight group-hover:text-primary transition-colors duration-300">
-                        {question.question}
-                    </h3>
+                    <div className="space-y-1">
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">Interview Question</p>
+                        <h3 className="text-lg sm:text-xl lg:text-2xl font-extrabold text-foreground leading-tight tracking-tight group-hover:text-primary transition-colors duration-300">
+                            {question.question}
+                        </h3>
+                    </div>
                 </div>
 
-                {/* Footer: Categories and Toggle */}
-                <div className="flex items-center justify-between gap-4 border-t border-border/40 pt-4 mt-2">
-                    <div className="flex flex-wrap gap-1.5">
+                {/* Categories & Action */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pt-5 border-t border-border/40">
+                    <div className="flex flex-wrap gap-2">
                         {question.categories.map((cat) => (
                             <span
                                 key={cat}
-                                className="text-[10px] font-semibold text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-md hover:bg-muted hover:text-foreground transition-colors"
+                                className="text-[11px] font-bold text-muted-foreground bg-muted/30 hover:bg-primary/10 hover:text-primary px-3 py-1 rounded-lg transition-all border border-transparent hover:border-primary/20 cursor-default"
                             >
                                 #{cat}
                             </span>
@@ -80,36 +82,41 @@ export function QuestionCard({ question, className }: QuestionCardProps) {
                     </div>
 
                     <Button
-                        variant="ghost"
-                        size="sm"
                         onClick={() => setShowAnswer(!showAnswer)}
-                        className="h-8 px-3 text-xs font-bold gap-1.5 hover:bg-primary/10 hover:text-primary rounded-full transition-all"
+                        className={cn(
+                            "w-full sm:w-auto h-11 px-6 font-black uppercase tracking-widest text-[11px] rounded-xl transition-all duration-300 shadow-xl",
+                            showAnswer
+                                ? "bg-muted text-foreground hover:bg-muted/80 shadow-none"
+                                : "bg-primary text-primary-foreground hover:shadow-primary/40 hover:-translate-y-0.5"
+                        )}
                     >
-                        {showAnswer ? 'Hide' : 'Show'}
+                        {showAnswer ? 'Hide Details' : 'Crack Answer'}
                         {showAnswer ? (
-                            <ChevronUp className="h-3.5 w-3.5" />
+                            <ChevronUp className="ml-2 h-4 w-4" />
                         ) : (
-                            <ChevronDown className="h-3.5 w-3.5" />
+                            <ChevronDown className="ml-2 h-4 w-4" />
                         )}
                     </Button>
                 </div>
 
-                {/* Answer Content */}
+                {/* Animated Answer Content */}
                 <div
                     className={cn(
-                        "grid transition-all duration-500 ease-in-out",
-                        showAnswer ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'
+                        "grid transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]",
+                        showAnswer ? 'grid-rows-[1fr] opacity-100 mt-6' : 'grid-rows-[0fr] opacity-0 mt-0 invisible'
                     )}
                 >
                     <div className="overflow-hidden">
-                        <div className="bg-muted/30 rounded-xl p-4 border border-border/40 text-sm leading-relaxed text-muted-foreground shadow-inner">
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-widest text-foreground">Suggested Answer</span>
+                        <div className="bg-gradient-to-br from-muted/50 to-muted/20 rounded-2xl p-6 sm:p-8 border border-border/40 space-y-4 shadow-inner">
+                            <div className="flex items-center gap-3">
+                                <div className="h-2 w-2 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/50" />
+                                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-foreground">Detailed Solution</span>
                             </div>
-                            <p className="text-zinc-700 dark:text-zinc-300 font-medium">
-                                {question.answer}
-                            </p>
+                            <div className="prose prose-sm dark:prose-invert max-w-none">
+                                <p className="text-zinc-700 dark:text-zinc-300 text-sm sm:text-base leading-relaxed font-bold">
+                                    {question.answer}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

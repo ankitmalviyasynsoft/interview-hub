@@ -1,8 +1,8 @@
 
 import React from "react";
 import { Controller, Control, FieldValues, Path, RegisterOptions } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/_components/ui/input";
+import { Label } from "@/_components/ui/label";
 
 interface ControlledInputProps<T extends FieldValues> extends React.InputHTMLAttributes<HTMLInputElement> {
     name: Path<T>;

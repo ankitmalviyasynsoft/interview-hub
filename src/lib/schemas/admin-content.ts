@@ -1,0 +1,37 @@
+import { z } from 'zod'
+
+export const companySchema = z.object({
+  id: z.string().optional(), // For edit
+  name: z.string().min(1, 'Company name is required'),
+})
+
+export const categorySchema = z.object({
+  id: z.string().optional(), // For edit
+  name: z.string().min(1, 'Category name is required'),
+})
+
+export const questionSchema = z.object({
+  id: z.string().optional(),
+  question: z.string().min(1, 'Question is required'),
+  answer: z.string().min(1, 'Answer is required'),
+  companyIds: z.array(z.string()).min(1, 'At least one company must be selected'),
+  categoryIds: z.array(z.string()).min(1, 'At least one category must be selected'),
+  difficulty: z.enum(['easy', 'medium', 'hard', 'super hard']),
+  level: z.enum(['entry', 'junior', 'mid', 'senior', 'expert']),
+})
+
+export const blogSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().min(1, 'Title is required'),
+  content: z.string().min(1, 'Content is required'),
+  excerpt: z.string().min(1, 'Excerpt is required'),
+  author: z.string().min(1, 'Author is required'),
+  tags: z.array(z.string()).optional(),
+  status: z.enum(['draft', 'published']),
+  publishDate: z.string().optional(),
+})
+
+export type CompanyFormData = z.infer<typeof companySchema>
+export type CategoryFormData = z.infer<typeof categorySchema>
+export type QuestionFormData = z.infer<typeof questionSchema>
+export type BlogFormData = z.infer<typeof blogSchema>
