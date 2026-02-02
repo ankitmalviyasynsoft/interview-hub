@@ -1,0 +1,29 @@
+{
+	"EMS Page Component": {
+		"prefix": "page",
+		"body": [
+			"import { Page } from '@/types'",
+			"",
+			"const $1: Page = () => {",
+			"  return ''",
+			"}",
+			"",
+			"$1.rootLayoutProps = {",
+			"  pageType: '$2',",
+			"  title: '$3',",
+			"}",
+			"",
+			"export default $1"
+		],
+	},
+	"EMS Component Style": {
+		"prefix": "css",
+		"body": [
+			"import { Style } from '@/types'",
+			"",
+			"export const style: Style = {",
+			" $1",
+			"}"
+		]
+	}
+}
