@@ -48,6 +48,6 @@ UserSchema.methods.comparePassword = async function (candidatePassword: string):
 }
 
 // Check if model exists before compiling to avoid OverwriteModelError in dev
-const User = mongoose.models.User || mongoose.model<IUser>('users', UserSchema)
+const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema)
 
 export default User
