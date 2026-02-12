@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { DashboardController } from '@/backend/controllers/dashboard.controller'
-import { authMiddleware } from '@/backend/middleware/auth.middleware'
+import { authMiddleware, AuthUser } from '@/backend/middleware/auth.middleware'
+import { ApiResponse } from '@/backend/lib/api-response'
 
 /**
  * @swagger
@@ -17,5 +18,12 @@ import { authMiddleware } from '@/backend/middleware/auth.middleware'
 export async function GET(req: NextRequest) {
   const auth = await authMiddleware(req)
   if (auth instanceof Response) return auth
-  return DashboardController.getStats()
+
+  const user = auth as AuthUser
+
+  if (user.role !== 'ADMIN' && user.role !== 'STAFF') {
+    return ApiResponse.forbidden('Access denied')
+  }
+
+  return DashboardController.getStats(user.id, user.role)
 }
