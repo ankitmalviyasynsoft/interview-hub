@@ -17,12 +17,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" suppressHydrationWarning className={plusJakartaSans.variable}>
       <body className="antialiased">
         <ReduxProvider>
-          <AuthProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-              <LayoutWrapper>{children}</LayoutWrapper>
-              <Toaster />
-            </ThemeProvider>
-          </AuthProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <LayoutWrapper>
+              <AuthProvider>{children}</AuthProvider>
+            </LayoutWrapper>
+            <Toaster />
+          </ThemeProvider>
         </ReduxProvider>
       </body>
     </html>

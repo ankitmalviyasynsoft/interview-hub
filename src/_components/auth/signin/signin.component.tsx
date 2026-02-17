@@ -1,20 +1,21 @@
 'use client'
 
-import React, { useState } from 'react'
 import Link from 'next/link'
 import paths from '@/navigate/paths'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInSchema, SignInSchema } from './signin.schema'
 import { ControlledInput } from '@/_components/ui/ControlledInput'
-import { useRouter } from 'next/navigation'
 import { useLoginMutation } from '@/redux/services/auth.api'
-import { useDispatch } from 'react-redux'
-import { setCredentials } from '@/redux/slices/authSlice'
-import { setCookie } from '@/utils/cookie.utils'
 import { toast } from 'sonner'
+import { setCookie } from '@/utils/cookie.utils'
+import { setCredentials } from '@/redux/slices/authSlice'
+import { useReduxDispatch } from '@/hooks/redux.hook'
+import { useRouter } from 'next/navigation'
+import { roles } from '@/utils'
 
 export const SignInComponent = () => {
+  const dispatch = useReduxDispatch()
   const router = useRouter()
   const {
     control,
@@ -28,26 +29,23 @@ export const SignInComponent = () => {
     },
   })
 
-  const dispatch = useDispatch()
-  const [login, { isLoading }] = useLoginMutation()
+  const [login, { isLoading, error }] = useLoginMutation()
 
   const onSubmit = async (data: SignInSchema) => {
     try {
       const result = await login(data).unwrap()
-      if (result?.success) {
-        // setCookie('token', result.data.token)
-        // dispatch(setCredentials(result.data))
-        // Redirect based on role
-        // const role = result.data.user.role.name
-        // if (role === 'ADMIN') {
-        //   router.push(paths.admin.dashboard())
-        // } else if (role === 'STAFF') {
-        //   router.push(paths.staffMember.dashboard())
-        // } else {
-        //   router.push(paths.home())
-        // }
+      setCookie('token', result?.token)
+
+      const role = result?.user?.role?.name
+      if (role === roles.admin) {
+        router.push(paths.admin.dashboard())
+      } else if (role === roles.staff) {
+        router.push(paths.staffMember.dashboard())
+      } else {
+        router.push(paths.home())
       }
     } catch (error: any) {
+      console.log('===========>', error)
       toast.error(error?.data?.message || 'Login failed')
     }
   }

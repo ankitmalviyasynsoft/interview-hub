@@ -17,12 +17,12 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       if (token) {
         try {
           const result = await getProfile().unwrap()
+          console.log('result-------------', result)
           if (result.success) {
-            dispatch(setCredentials({ user: result.data, token }))
+            dispatch(setCredentials({ user: result as any, token }))
           }
         } catch (error) {
           console.error('Failed to restore session:', error)
-          // Optional: clear token if invalid
         }
       }
       setIsLoading(false)
@@ -32,9 +32,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, [dispatch, getProfile])
 
   if (isLoading) {
-    // Optional: Render a loader here if you want to block UI until auth is checked
-    // For now, we return children to avoid layout shift or white screen,
-    // but typically you might want a spinner.
     return <>{children}</>
   }
 

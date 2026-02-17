@@ -43,36 +43,36 @@ export interface ResetPasswordRequest {
 
 export const extendedApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    login: builder.mutation<AuthResponse<{ user: User; token: string }>, LoginRequest>({
+    login: builder.mutation<{ user: User; token: string }, LoginRequest>({
       query: (credentials) => ({
-        url: 'auth/login',
+        url: '/auth/login',
         method: 'POST',
         body: credentials,
       }),
     }),
     register: builder.mutation<AuthResponse<User>, RegisterRequest>({
       query: (userData) => ({
-        url: 'auth/register',
+        url: '/auth/register',
         method: 'POST',
         body: userData,
       }),
     }),
     forgotPassword: builder.mutation<AuthResponse<{ resetToken: string }>, ForgotPasswordRequest>({
       query: (data) => ({
-        url: 'auth/forgot-password',
+        url: '/auth/forgot-password',
         method: 'POST',
         body: data,
       }),
     }),
     resetPassword: builder.mutation<AuthResponse<{ token: string }>, ResetPasswordRequest>({
       query: (data) => ({
-        url: 'auth/reset-password',
+        url: '/auth/reset-password',
         method: 'POST',
         body: data,
       }),
     }),
     getProfile: builder.query<AuthResponse<User>, void>({
-      query: () => 'auth/profile',
+      query: () => '/auth/profile',
     }),
   }),
 })
