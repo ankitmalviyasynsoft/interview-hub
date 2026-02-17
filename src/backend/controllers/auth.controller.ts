@@ -3,7 +3,8 @@ import { UserService } from '../services/user.service'
 import Role, { defaultRoles } from '../models/Role'
 import { ApiResponse } from '../lib/api-response'
 import { handleError } from '../lib/error-handler'
-import { signToken } from '../lib/auth'
+import { signToken, verifyToken } from '../lib/auth'
+import { authMiddleware } from '../middleware/auth.middleware'
 
 import crypto from 'crypto'
 
@@ -113,6 +114,29 @@ export class AuthController {
       const jwtToken = signToken({ id: user._id, email: user.email, role: user.role.name })
 
       return ApiResponse.success({ token: jwtToken }, 'Password updated successfully')
+    } catch (error) {
+      return handleError(error)
+    }
+  }
+
+  static async getProfile(req: NextRequest) {
+    try {
+      const authResult = await authMiddleware(req)
+      if (authResult instanceof Response) {
+        return authResult
+      }
+
+      const user = await UserService.findUserById(authResult.id)
+      if (!user) {
+        return ApiResponse.notFound('User not found')
+      }
+
+      const userObj = user.toObject()
+      delete userObj.password
+      delete userObj.resetPasswordToken
+      delete userObj.resetPasswordExpire
+
+      return ApiResponse.success(userObj, 'Profile retrieved successfully')
     } catch (error) {
       return handleError(error)
     }
