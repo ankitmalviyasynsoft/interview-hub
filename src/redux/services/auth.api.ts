@@ -49,6 +49,7 @@ export const extendedApi = api.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
+      transformResponse: (response: AuthResponse<{ user: User; token: string }>) => response.data,
     }),
     register: builder.mutation<AuthResponse<User>, RegisterRequest>({
       query: (userData) => ({

@@ -17,7 +17,7 @@ const rootReducer = combineReducers({
   [authSlice.name]: authSlice.reducer,
 })
 
-const persistConfig = { key: 'InterviewHub', storage, whitelist: ['layout', 'auth'] }
+const persistConfig = { key: 'InterviewHub', storage, whitelist: ['layout'] }
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
