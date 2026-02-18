@@ -1,26 +1,10 @@
 'use client'
 
-import { use, useEffect, useState } from 'react'
+import { use } from 'react'
 import { CategoryForm } from '@/_components/features/category/form/CategoryForm'
-import { CategoryFormData } from '@/lib/schemas/admin-content'
 
-const getCategory = (id: string): CategoryFormData => {
-  return { name: 'React' }
-}
-
-export default function StaffEditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const [data, setData] = useState<CategoryFormData | undefined>(undefined)
-
-  useEffect(() => {
-    setData(getCategory(id))
-  }, [id])
-
-  const handleSubmit = (data: any) => {
-    console.log('Updated (Staff):', data)
-  }
-
-  if (!data) return <div>Loading...</div>
+async function StaffEditCategoryPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -29,9 +13,11 @@ export default function StaffEditCategoryPage({ params }: { params: Promise<{ id
       </div>
       <div className="mx-auto max-w-2xl">
         <div className="rounded-lg border bg-card p-6 shadow-sm">
-          <CategoryForm initialData={data} onSubmit={handleSubmit} />
+          <CategoryForm categoryId={id} />
         </div>
       </div>
     </div>
   )
 }
+
+export default StaffEditCategoryPage
