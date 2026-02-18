@@ -8,6 +8,7 @@ export const companySchema = z.object({
 export const categorySchema = z.object({
   id: z.string().optional(), // For edit
   name: z.string().min(1, 'Category name is required'),
+  description: z.string().optional(),
 })
 
 export const questionSchema = z.object({
