@@ -1,3 +1,4 @@
+import { complexityEnum, experienceEnum } from '@/utils'
 import mongoose, { Schema, Document } from 'mongoose'
 
 export interface IQuestion extends Document {
@@ -37,12 +38,13 @@ const QuestionSchema: Schema = new Schema(
     ],
     complexity: {
       type: String,
-      enum: ['Easy', 'Medium', 'Hard'],
-      default: 'Medium',
+      enum: complexityEnum,
+      default: 'medium',
     },
     experience: {
       type: String,
-      required: [true, 'Please provide experience breadth'],
+      enum: experienceEnum,
+      default: 'entry',
     },
     slug: {
       type: String,

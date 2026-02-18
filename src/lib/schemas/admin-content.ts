@@ -14,12 +14,12 @@ export const categorySchema = z.object({
 
 export const questionSchema = z.object({
   id: z.string().optional(),
-  question: z.string().min(1, 'Question is required'),
-  answer: z.string().min(1, 'Answer is required'),
+  title: z.string().min(1, 'Title is required'),
+  modelAnswer: z.string().min(1, 'Model Answer is required'),
   companyIds: z.array(z.string()).min(1, 'At least one company must be selected'),
   categoryIds: z.array(z.string()).min(1, 'At least one category must be selected'),
-  difficulty: z.enum(['easy', 'medium', 'hard', 'super hard']),
-  level: z.enum(['entry', 'junior', 'mid', 'senior', 'expert']),
+  complexity: z.enum(['easy', 'medium', 'hard', 'super hard']),
+  experience: z.enum(['entry', 'junior', 'mid', 'senior', 'expert']),
 })
 
 export const blogSchema = z.object({

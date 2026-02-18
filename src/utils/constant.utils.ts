@@ -3,3 +3,7 @@ export const roles = {
   staff: 'STAFF',
   user: 'USER',
 }
+
+export const experienceEnum = ['entry', 'junior', 'mid', 'senior', 'expert']
+
+export const complexityEnum = ['easy', 'medium', 'hard', 'super hard']
