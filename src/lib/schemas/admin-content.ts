@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const companySchema = z.object({
   id: z.string().optional(), // For edit
   name: z.string().min(1, 'Company name is required'),
+  description: z.string().optional(),
 })
 
 export const categorySchema = z.object({

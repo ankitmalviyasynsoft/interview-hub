@@ -5,14 +5,14 @@ import { MoreHorizontal, FileEdit, Trash } from 'lucide-react'
 import { Button } from '@/_components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/_components/ui/dropdown-menu'
 import paths from '@/navigate/paths'
-import { Category } from '@/redux/services/category.api'
+import { Company } from '@/redux/services/company.api'
 import { DeleteConfirmDialog } from '@/_components/ui/delete-confirm-dialog'
 
-interface UseCategoryColumnsProps {
-  onDelete: (category: Category) => void
+interface UseCompanyColumnsProps {
+  onDelete: (company: Company) => void
 }
 
-export const useCategoryColumns = ({ onDelete }: UseCategoryColumnsProps): ColumnDef<Category>[] => {
+export const useCompanyColumns = ({ onDelete }: UseCompanyColumnsProps): ColumnDef<Company>[] => {
   return [
     {
       accessorKey: 'name',
@@ -26,7 +26,7 @@ export const useCategoryColumns = ({ onDelete }: UseCategoryColumnsProps): Colum
     {
       id: 'actions',
       cell: ({ row }) => {
-        const category = row.original
+        const company = row.original
         const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
         return (
@@ -40,9 +40,9 @@ export const useCategoryColumns = ({ onDelete }: UseCategoryColumnsProps): Colum
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(category._id)}>Copy ID</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigator.clipboard.writeText(company._id)}>Copy ID</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <Link href={paths.admin.categories.edit(category._id)}>
+                <Link href={paths.admin.company.edit(company._id)}>
                   <DropdownMenuItem>
                     <FileEdit className="mr-2 h-4 w-4" />
                     Edit
@@ -59,11 +59,11 @@ export const useCategoryColumns = ({ onDelete }: UseCategoryColumnsProps): Colum
               isOpen={showDeleteDialog}
               onClose={() => setShowDeleteDialog(false)}
               onConfirm={() => {
-                onDelete(category)
+                onDelete(company)
                 setShowDeleteDialog(false)
               }}
-              title="Delete Category?"
-              description={`Are you sure you want to delete "${category.name}"? This action cannot be undone.`}
+              title="Delete Company?"
+              description={`Are you sure you want to delete "${company.name}"? This action cannot be undone.`}
             />
           </>
         )
