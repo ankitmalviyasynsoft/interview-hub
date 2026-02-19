@@ -1,3 +1,4 @@
+import { complexityEnum, experienceEnum } from '@/utils'
 import { z } from 'zod'
 
 export const companySchema = z.object({
@@ -18,8 +19,8 @@ export const questionSchema = z.object({
   modelAnswer: z.string().min(1, 'Model Answer is required'),
   companyIds: z.array(z.string()).min(1, 'At least one company must be selected'),
   categoryIds: z.array(z.string()).min(1, 'At least one category must be selected'),
-  complexity: z.enum(['easy', 'medium', 'hard', 'super hard']),
-  experience: z.enum(['entry', 'junior', 'mid', 'senior', 'expert']),
+  complexity: z.enum(complexityEnum),
+  experience: z.enum(experienceEnum),
 })
 
 export const blogSchema = z.object({

@@ -87,16 +87,6 @@ export function QuestionForm({ questionId }: QuestionFormProps) {
       // experience from api seems to be lowercase 'mid', 'entry' etc. ensure it matches expected enum values if needed.
       const experience = anyQuestionData?.experience
 
-      console.log('============?', {
-        title: questionData.title,
-        modelAnswer: questionData.modelAnswer,
-        companyIds,
-        categoryIds,
-        complexity,
-        experience,
-        id: questionData._id,
-      })
-
       form.reset({
         title: questionData.title,
         modelAnswer: questionData.modelAnswer,
@@ -113,15 +103,12 @@ export function QuestionForm({ questionId }: QuestionFormProps) {
     try {
       if (isEditMode && questionId) {
         await updateQuestion({ id: questionId, data }).unwrap()
-        toast.success('Question updated successfully')
       } else {
         await createQuestion(data).unwrap()
-        toast.success('Question created successfully')
       }
       router.push(paths.admin.question.root())
     } catch (error) {
       console.error('Question form error:', error)
-      toast.error('Failed to save question')
     }
   }
 
@@ -230,6 +217,7 @@ export function QuestionForm({ questionId }: QuestionFormProps) {
                 <FormField
                   control={form.control}
                   name="complexity"
+                  key={form.watch('complexity')}
                   render={({ field }) => (
                     <FormItem className="space-y-2">
                       <FormLabel className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Complexity Level</FormLabel>
@@ -254,6 +242,7 @@ export function QuestionForm({ questionId }: QuestionFormProps) {
                 <FormField
                   control={form.control}
                   name="experience"
+                  key={form.watch('experience')}
                   render={({ field }) => (
                     <FormItem className="space-y-2">
                       <FormLabel className="text-sm font-bold uppercase tracking-wider text-muted-foreground">Experience Breadth</FormLabel>
