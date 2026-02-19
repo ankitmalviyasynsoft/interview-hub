@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { QuestionFilterState } from '@/lib/types'
-import { DUMMY_QUESTIONS } from '@/lib/dummy-data'
 import { Section } from '@/_components/ui/Section'
 import { QuestionCard } from '@/_components/common/QuestionCard/QuestionCard.component'
 import { QuestionFilter } from '../QuestionFilter/QuestionFilter.component'
@@ -10,6 +9,28 @@ import { Button } from '@/_components/ui/button'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/_components/ui/pagination'
 import { Sparkles, ArrowRight, BookOpen, Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Question } from '@/lib/types'
+
+interface Company {
+  _id: string
+  name: string
+}
+
+interface Category {
+  _id: string
+  name: string
+}
+
+interface BaseQuestion {
+  _id: string
+  title: string
+  modelAnswer: string
+  targetCompanies: Company[]
+  categories: Category[]
+  complexity: string
+  experience: string
+  createdAt: string
+}
 
 export default function HomeContent() {
   const [filters, setFilters] = useState<QuestionFilterState>({
@@ -18,30 +39,70 @@ export default function HomeContent() {
     category: '',
   })
   const [currentPage, setCurrentPage] = useState(1)
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [loading, setLoading] = useState(false)
+  const [totalItems, setTotalItems] = useState(0)
   const itemsPerPage = 5
 
   const handleFilterChange = useCallback((newFilters: QuestionFilterState) => {
-    const sanitizedFilters = {
-      ...newFilters,
-      company: newFilters.company === 'null_value' ? '' : newFilters.company,
-      category: newFilters.category === 'null_value' ? '' : newFilters.category,
-    }
-    setFilters(sanitizedFilters)
-    setCurrentPage(1)
+    setFilters((prev) => {
+      const sanitizedFilters = {
+        ...newFilters,
+        company: newFilters.company === 'null_value' ? '' : newFilters.company,
+        category: newFilters.category === 'null_value' ? '' : newFilters.category,
+      }
+
+      if (prev.search === sanitizedFilters.search && prev.company === sanitizedFilters.company && prev.category === sanitizedFilters.category) {
+        return prev
+      }
+
+      return sanitizedFilters
+    })
   }, [])
 
-  const filteredQuestions = useMemo(() => {
-    return DUMMY_QUESTIONS.filter((q) => {
-      const matchesSearch = q.question.toLowerCase().includes(filters.search.toLowerCase()) || q.answer.toLowerCase().includes(filters.search.toLowerCase())
-      const matchesCompany = filters.company ? q.company === filters.company : true
-      const matchesCategory = filters.category ? q.categories.includes(filters.category) : true
-
-      return matchesSearch && matchesCompany && matchesCategory
-    })
+  useEffect(() => {
+    setCurrentPage(1)
   }, [filters])
 
-  const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage)
-  const displayedQuestions = filteredQuestions.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  const fetchQuestions = useCallback(async () => {
+    try {
+      setLoading(true)
+      const queryParams = new URLSearchParams()
+      queryParams.append('page', currentPage.toString())
+      queryParams.append('limit', itemsPerPage.toString())
+
+      if (filters.search) queryParams.append('search', filters.search)
+      if (filters.company) queryParams.append('company', filters.company)
+      if (filters.category) queryParams.append('category', filters.category)
+
+      const res = await fetch(`/api/questions?${queryParams.toString()}`)
+      const data = await res.json()
+
+      if (data.success) {
+        setTotalItems(data.data.total)
+        const mappedQuestions: Question[] = data.data.data.map((q: BaseQuestion) => ({
+          id: q._id,
+          question: q.title,
+          answer: q.modelAnswer,
+          categories: q.categories?.map((c) => c.name) || [],
+          company: q.targetCompanies?.[0]?.name || 'General',
+          difficulty: q.complexity.charAt(0).toUpperCase() + q.complexity.slice(1),
+          createdAt: q.createdAt,
+        }))
+        setQuestions(mappedQuestions)
+      }
+    } catch (error) {
+      console.error('Failed to fetch questions:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [currentPage, filters])
+
+  useEffect(() => {
+    fetchQuestions()
+  }, [fetchQuestions])
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
 
   return (
     <Section className="min-h-screen bg-background relative overflow-hidden">
@@ -91,15 +152,19 @@ export default function HomeContent() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-black uppercase tracking-widest flex items-center gap-2">
               Curated Content
-              <span className="inline-flex items-center justify-center min-w-8 h-6 px-2 rounded-lg bg-primary text-primary-foreground text-[10px] font-bold">{filteredQuestions.length}</span>
+              <span className="inline-flex items-center justify-center min-w-8 h-6 px-2 rounded-lg bg-primary text-primary-foreground text-[10px] font-bold">{totalItems}</span>
             </h2>
             <p className="hidden sm:block text-xs font-bold text-muted-foreground uppercase tracking-widest">
               Showing Page {currentPage} of {totalPages || 1}
             </p>
           </div>
 
-          {displayedQuestions.length > 0 ? (
-            displayedQuestions.map((q, idx) => (
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+          ) : questions.length > 0 ? (
+            questions.map((q, idx) => (
               <div key={q.id} className="animate-in fade-in slide-in-from-bottom-8 duration-700" style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'both' }}>
                 <QuestionCard question={q} />
               </div>
