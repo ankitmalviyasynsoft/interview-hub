@@ -43,7 +43,7 @@ export default function HomeContent() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-black uppercase tracking-widest flex items-center gap-2">
               Curated Content
-              <span className="inline-flex items-center justify-center min-w-8 h-6 px-2 rounded-lg bg-primary text-primary-foreground text-[10px] font-bold">{totalItems}</span>
+              <span className="mr-4 inline-flex items-center justify-center min-w-10 h-10 px-2 rounded-full bg-primary text-primary-foreground font-bold text-xs">{totalItems}</span>
             </h2>
             <div className="flex items-center gap-4">
               <p className="hidden sm:block text-xs font-bold text-muted-foreground uppercase tracking-widest">

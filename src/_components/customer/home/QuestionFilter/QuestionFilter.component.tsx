@@ -32,6 +32,7 @@ export function QuestionFilter({ onFilterChange, companies, categories, initialF
   const watchedSearch = watch('search')
   const values = watch()
 
+  // enhance ment remove this code and make it reusable
   useEffect(() => {
     setMounted(true)
     const checkMobile = () => {
@@ -103,7 +104,7 @@ export function QuestionFilter({ onFilterChange, companies, categories, initialF
 
           <Drawer>
             <DrawerTrigger asChild>
-              <Button size="icon" variant="ghost" className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 text-primary hover:bg-primary/10 rounded-xl relative">
+              <Button size="icon" variant="ghost" className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 text-primary hover:bg-primary/10 rounded-xl ">
                 <SlidersHorizontal className="h-5 w-5" />
                 {activeFiltersCount > 0 && (
                   <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center animate-in zoom-in">{activeFiltersCount}</span>
@@ -220,7 +221,12 @@ const FilterFields = ({ control, companies, categories, handleReset, isDrawer = 
     </div>
 
     <div className="md:col-span-1 lg:col-span-4 xl:col-span-1 pt-2 md:pt-0">
-      <Button type="button" variant="ghost" onClick={handleReset} className="w-full h-12 gap-2 font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary transition-all rounded-xl">
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={handleReset}
+        className="w-full h-12 flex items-center gap-2 font-black text-[10px] uppercase tracking-widest text-muted-foreground hover:text-primary hover:bg-transparent transition-all rounded-xl"
+      >
         <RotateCcw className="h-4 w-4" />
         Reset
       </Button>
