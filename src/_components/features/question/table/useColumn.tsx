@@ -4,24 +4,34 @@ import { useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { MoreHorizontal, FileEdit, Trash } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 import { Button } from '@/_components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/_components/ui/dropdown-menu'
 import { Badge } from '@/_components/ui/badge'
 import { Question } from '@/redux/services/question.api'
 import { DeleteConfirmDialog } from '@/_components/ui/delete-confirm-dialog'
+import paths from '@/navigate/paths'
+import { MarkdownRenderer } from '@/_components/ui/MarkdownRenderer'
 
 interface UseQuestionColumnsProps {
   onDelete: (question: Question) => void
 }
 
 export const useQuestionColumns = ({ onDelete }: UseQuestionColumnsProps): ColumnDef<Question>[] => {
+  const pathname = usePathname()
+  const isAdmin = pathname.startsWith('/admin')
+
   return [
     {
       accessorKey: 'title',
       header: 'Title',
       cell: ({ row }) => {
-        return <span className="max-w-[500px] truncate block font-medium">{row.getValue('title')}</span>
+        return (
+          <span className="max-w-[500px] truncate block font-medium">
+            <MarkdownRenderer content={row.getValue('title')} inline={true} />
+          </span>
+        )
       },
     },
     {
@@ -41,6 +51,7 @@ export const useQuestionColumns = ({ onDelete }: UseQuestionColumnsProps): Colum
       id: 'actions',
       cell: ({ row }) => {
         const question = row.original
+        // eslint-disable-next-react-hooks/rules-of-hooks
         const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
         return (
@@ -56,7 +67,7 @@ export const useQuestionColumns = ({ onDelete }: UseQuestionColumnsProps): Colum
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem onClick={() => navigator.clipboard.writeText(question._id)}>Copy ID</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <Link href={`/admin/question/edit/${question._id}`}>
+                <Link href={isAdmin ? paths.admin.question.edit(question._id) : paths.staffMember.question.edit(question._id)}>
                   <DropdownMenuItem>
                     <FileEdit className="mr-2 h-4 w-4" />
                     Edit

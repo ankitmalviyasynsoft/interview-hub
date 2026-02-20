@@ -36,11 +36,11 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-orange-500/5 p-0 overflow-hidden group">
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-primary/5 p-0 overflow-hidden group">
           {user.image ? (
             <img src={user.image} alt={user.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-amber-500 text-white font-bold text-sm shadow-md">{initials}</div>
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-bold text-sm shadow-md">{initials}</div>
           )}
         </Button>
       </DropdownMenuTrigger>

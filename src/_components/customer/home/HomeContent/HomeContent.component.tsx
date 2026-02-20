@@ -6,15 +6,16 @@ import { QuestionCard } from '@/_components/common/QuestionCard/QuestionCard.com
 import { QuestionFilter } from '../QuestionFilter/QuestionFilter.component'
 import { Button } from '@/_components/ui/button'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/_components/ui/pagination'
-import { Search } from 'lucide-react'
+import { Search, ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 import { useQuestionFilter } from '@/hooks/useQuestionFilter'
 
 export default function HomeContent() {
   const { questions, categories, companies, loading, totalItems, currentPage, totalPages, filters, setFilters } = useQuestionFilter(5)
 
   return (
-    <Section className="min-h-screen bg-background relative overflow-hidden">
+    <Section className="min-h-screen bg-background relative overflow-clip">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Hero Section */}
         <div className="mb-16 pt-8 sm:pt-16 text-center space-y-8">
@@ -44,9 +45,16 @@ export default function HomeContent() {
               Curated Content
               <span className="inline-flex items-center justify-center min-w-8 h-6 px-2 rounded-lg bg-primary text-primary-foreground text-[10px] font-bold">{totalItems}</span>
             </h2>
-            <p className="hidden sm:block text-xs font-bold text-muted-foreground uppercase tracking-widest">
-              Showing Page {currentPage} of {totalPages || 1}
-            </p>
+            <div className="flex items-center gap-4">
+              <p className="hidden sm:block text-xs font-bold text-muted-foreground uppercase tracking-widest">
+                Showing Page {currentPage} of {totalPages || 1}
+              </p>
+              <Button asChild variant="outline" size="sm" className="rounded-xl border-primary/20 text-xs font-bold uppercase tracking-widest hover:bg-primary/5 hover:text-primary">
+                <Link href="/questions">
+                  View All <ArrowRight className="ml-2 h-3 w-3" />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {loading ? (
