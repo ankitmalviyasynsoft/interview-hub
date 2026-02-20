@@ -7,6 +7,8 @@ import Category from '../models/Category'
 import { ApiResponse } from '../lib/api-response'
 import { ApiFeatures } from '../lib/api-features'
 
+import dbConnect from '../lib/db'
+
 export class QuestionController extends BaseController<any> {
   constructor() {
     super(questionService, Question)
@@ -14,6 +16,7 @@ export class QuestionController extends BaseController<any> {
 
   async getAll(req: NextRequest) {
     try {
+      await dbConnect()
       const { searchParams } = new URL(req.url)
       const queryObj = Object.fromEntries(searchParams.entries())
 

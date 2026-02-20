@@ -4,6 +4,7 @@ import { ApiResponse } from '../lib/api-response'
 import { handleError } from '../lib/error-handler'
 import { ApiFeatures } from '../lib/api-features'
 import { Model } from 'mongoose'
+import dbConnect from '../lib/db'
 
 export class BaseController<T extends any> {
   constructor(
@@ -13,6 +14,7 @@ export class BaseController<T extends any> {
 
   async getAll(req: NextRequest) {
     try {
+      await dbConnect()
       const { searchParams } = new URL(req.url)
       const queryObj = Object.fromEntries(searchParams.entries())
 
